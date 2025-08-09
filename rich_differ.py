@@ -1,10 +1,6 @@
 from difflib import ndiff
 
-
-DIFF_COLORS = {
-    '-': 'red',
-    '+': 'green'
-}
+DIFF_COLORS = {'-': 'red', '+': 'green'}
 
 def rich_diff(old: str, new: str):
     if old == new:
