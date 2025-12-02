@@ -7,6 +7,9 @@ from rich.table import Table
 import os, typer
 
 def get_all_paths_to_replace(path: Path):
+    if path.is_file():
+        return [path]
+
     file_objects: list[Path] = []
 
     for root_str, dir_names, file_names in os.walk(path):
