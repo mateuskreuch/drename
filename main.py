@@ -1,6 +1,7 @@
 from pathlib import Path
 from replacer import CaseAwareReplacer, FileIsBinaryError
 from rich import print
+from rich.markup import escape
 from rich_differ import rich_diff
 from rich.live import Live
 from rich.table import Table
@@ -87,7 +88,7 @@ def drename(
 
             table.add_row(
                 type_text,
-                rich_diff(str(relative_old_path), str(relative_new_path)),
+                rich_diff(escape(str(relative_old_path)), escape(str(relative_new_path))),
                 "[red]" + "; ".join(errors) + "[/]"
             )
             live.update(table)
