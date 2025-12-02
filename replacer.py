@@ -58,11 +58,11 @@ class CaseAwareReplacer:
             buffer = [matchcase(safe_get(parts, i), x) for i, x in enumerate(self._new)]
 
             if not separators:
-               return ''.join(buffer)
-
-            buffer = itertools.zip_longest(buffer, separators, fillvalue=separators[-1])
-            buffer = itertools.chain.from_iterable(buffer)
-            new_str = ''.join(list(buffer)[:-1])
+                new_str = ''.join(buffer)
+            else:
+                buffer = itertools.zip_longest(buffer, separators, fillvalue=separators[-1])
+                buffer = itertools.chain.from_iterable(buffer)
+                new_str = ''.join(list(buffer)[:-1])
 
             self._replacements[old_str] = new_str
 
