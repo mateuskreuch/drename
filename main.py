@@ -49,7 +49,7 @@ def drename(
     new: str,
     dry: bool = typer.Option(False, help="Perform a dry run without making changes"),
     force: bool = typer.Option(False, help="Force replacements even with pending git changes"),
-    path: Path = typer.Argument(Path.cwd(), help="Root directory to process")
+    path: Path = typer.Argument(Path.cwd(), help="Root directory or file to process")
 ):
     """
     Replace OLD with NEW in file names, directories, and file contents while respecting case:\n
