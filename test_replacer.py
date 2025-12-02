@@ -1,7 +1,7 @@
 from replacer import CaseAwareReplacer
 import unittest
 
-class TestCafeAwareReplacer(unittest.TestCase):
+class TestCaseAwareReplacer(unittest.TestCase):
     def test_simple_same_case_replacements(self):
         r = CaseAwareReplacer("old_string", "new_string")
         self.assertEqual(r.replace("this is a old_string"), "this is a new_string")
