@@ -5,7 +5,7 @@ from rich.markup import escape
 from rich_differ import rich_diff
 from rich.live import Live
 from rich.table import Table
-import os, typer
+import os, typer, subprocess
 
 def get_all_paths_to_replace(path: Path):
     if path.is_file():
@@ -21,6 +21,26 @@ def get_all_paths_to_replace(path: Path):
 
     return file_objects
 
+def is_git_clean(path: Path):
+    if not path.is_dir():
+        return True
+
+    try:
+        subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            check=True, capture_output=True, cwd=path
+        )
+
+        status_result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            check=True, capture_output=True, text=True, cwd=path
+        )
+
+        return not status_result.stdout
+
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return True
+
 app = typer.Typer()
 
 @app.command()
@@ -28,6 +48,7 @@ def drename(
     old: str,
     new: str,
     dry: bool = typer.Option(False, help="Perform a dry run without making changes"),
+    force: bool = typer.Option(False, help="Force replacements even with pending git changes"),
     path: Path = typer.Argument(Path.cwd(), help="Root directory to process")
 ):
     """
@@ -44,6 +65,11 @@ def drename(
     """
     if old == new:
         print("[red]Old and new are the same. No actions will be taken.[/]")
+        raise typer.Exit(code=1)
+
+    if not force and not dry and not is_git_clean(path):
+        print("[red]There are pending git changes. Please commit or stash them first.[/]")
+        print("[yellow]To override, run with --force[/]")
         raise typer.Exit(code=1)
 
     replacer = CaseAwareReplacer(old, new, dry_run=dry)
