@@ -93,14 +93,20 @@ def drename(
             )
             live.update(table)
 
-    table = Table()
-    table.add_column("Old")
-    table.add_column("New")
+    replacements_made = replacer.get_replacements_made().items()
 
-    for old_str, new_str in replacer.get_replacements_made().items():
-        table.add_row(old_str, new_str)
+    if replacements_made:
+        table = Table()
+        table.add_column("Old")
+        table.add_column("New")
 
-    print(table)
+        for old_str, new_str in replacements_made:
+            table.add_row(old_str, new_str)
+
+        print(table)
+
+    else:
+        print("[red]No possible replacements found.[/]")
 
 if __name__ == "__main__":
     app()
